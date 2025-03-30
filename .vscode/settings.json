@@ -1,0 +1,8 @@
+{
+  "material-icon-theme.folders.associations": {
+    "gameplay": "console",
+    "maps": "resource",
+    "combat": "guard",
+    "movement": "directive"
+  },
+}

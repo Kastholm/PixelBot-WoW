@@ -57,7 +57,7 @@ class ThreadManager:
 
     def toggle_bot(self):
         if self.toggle_screenshot_threads.is_set():
-            if self.toggle_bot_thread.is_set():
+            if self.toggle_bot_thread.is_set(): 
                 self.toggle_bot_thread.clear()
             else:
                 self.toggle_bot_thread.set()

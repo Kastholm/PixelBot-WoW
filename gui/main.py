@@ -4,25 +4,27 @@ from tkinter import END
 import customtkinter as ctk
 from PIL import Image, ImageTk
 
+from utils.log.write_to_log import welcome_msg
+
 class GuiAgent:
     def __init__(self, app):
         ctk.set_appearance_mode("dark")
         ctk.set_default_color_theme("blue")
         img = Image.open('gui/utils/img/logo.png')
-        resized_img = img.resize((200, 150), Image.ANTIALIAS)
+        resized_img = img.resize((200, 150)) # , Image.ANTIALIAS
         self.logo = ImageTk.PhotoImage(resized_img)
         self.app = app
         self.height = 700
-        self.app.geometry(f"900x{self.height}")
+        self.app.geometry(f"1000x{self.height}")
         self.app.title("CustomTkinter")
         self.details = [
             {'name': 'Health', 'info': '0'},
             {'name': 'Combat Indicator', 'info': 'No combat'}
         ]
-        self.main_frame = ctk.CTkFrame(master=self.app, width=600, height=self.height)
+        self.main_frame = ctk.CTkFrame(master=self.app, width=700, height=self.height)
         self.left_frame = ctk.CTkFrame(master=self.app, width=300, height=self.height , bg_color='#33373c',
                                        fg_color='#33373c')
-        self.textbox = ctk.CTkTextbox(master=self.main_frame , width=600, height=self.height, corner_radius=0)
+        self.textbox = ctk.CTkTextbox(master=self.main_frame , width=700, height=self.height, corner_radius=0, font=("Consolas", 12))
         self.textbox.grid(row=0, column=0, sticky="nsew")
         self.load_gui()
         self.live_bot_updates()
@@ -55,7 +57,7 @@ class GuiAgent:
 
     def live_bot_updates(self):
         try:
-            with open("gui/utils/log/log.txt", "r", encoding="utf-8") as file:
+            with open("utils\log\\log.txt", "r", encoding="utf-8") as file:
                 content = file.read()
         except Exception as e:
             content = f"Error: {e}"
@@ -64,9 +66,10 @@ class GuiAgent:
         self.app.after(100, self.live_bot_updates)
 
     def clear_bot_update_textfield(self):
-        with open("gui/utils/log/log.txt", "w", encoding="utf-8") as file:
+        with open("utils\log\\log.txt", "w", encoding="utf-8") as file:
             file.write("")
-        self.textbox("1.0", END)
+        self.textbox.delete("1.0", END)
+        welcome_msg()
 
     def load_gui(self):
         # Configure grid for the main window

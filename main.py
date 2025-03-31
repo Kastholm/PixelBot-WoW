@@ -12,6 +12,8 @@ from screen.enemy import EnemyAgent
 from screen.player import PlayerAgent
 from PIL import Image, ImageTk
 
+from utils.log.write_to_log import welcome_msg, write_to_log
+
 class ThreadManager:
 
     def __init__(self):
@@ -30,7 +32,10 @@ class ThreadManager:
         self.combat_indicator_agent = CombatIndicatorAgent(self.toggle_screenshot_threads, self.queued_combat_indicator)
         self.enemy_agent = EnemyAgent(self.toggle_screenshot_threads, self.queued_enemy_indicator)
         self.player_agent = PlayerAgent(self.toggle_screenshot_threads, self.queued_health_indicator)
-        self.bot_agent = BotAgent(self.toggle_bot_thread)
+        
+        self.bot_agent = BotAgent(self.toggle_bot_thread, self.queued_coordinates_indicator,
+                                  self.queued_combat_indicator, self.queued_enemy_indicator,
+                                  self.queued_health_indicator) #Send alle qs og fordel i gameplay?
 
 
         self.threads = {
@@ -47,6 +52,8 @@ class ThreadManager:
             self.toggle_bot_thread.clear()
             self.toggle_screenshot_threads.clear()
             self.screenshots_are_running = False
+            write_to_log(f'🎥PixelBot Paused')
+            write_to_log(f'⚔️CombatBot Paused')
         else:
             if self.program_started_before == False:
                 for thread in self.threads.values():
@@ -54,13 +61,16 @@ class ThreadManager:
                 self.program_started_before = True
             self.screenshots_are_running = True
             self.toggle_screenshot_threads.set()
+            write_to_log(f'🎥PixelBot Started')
 
     def toggle_bot(self):
         if self.toggle_screenshot_threads.is_set():
             if self.toggle_bot_thread.is_set(): 
                 self.toggle_bot_thread.clear()
+                write_to_log(f'⚔️CombatBot Paused')
             else:
                 self.toggle_bot_thread.set()
+                write_to_log(f'⚔️CombatBot started')
         else:
             self.toggle_bot_thread.clear()
             messagebox.showerror("Fejl", "Screen Recorder kører ikke")
@@ -84,6 +94,7 @@ def start_gui(thread_manager):
     app = ctk.CTk()
     GuiAgent(app)
     thread_manager.gui_button_layout(app)
+    welcome_msg()
     app.mainloop()
 
 if __name__ == "__main__":
@@ -91,3 +102,5 @@ if __name__ == "__main__":
     gui_thread = threading.Thread(target=start_gui, args=(tm,))
     gui_thread.start()
     gui_thread.join()
+
+

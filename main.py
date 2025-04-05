@@ -102,5 +102,3 @@ if __name__ == "__main__":
     gui_thread = threading.Thread(target=start_gui, args=(tm,))
     gui_thread.start()
     gui_thread.join()
-
-

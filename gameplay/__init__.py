@@ -2,8 +2,9 @@ import queue
 import random
 import time
 import threading
+
+import pyautogui
 from utils.log.write_to_log import write_to_log
-from keyboard import *
 
 star_img = r'gameplay\utils\img\star.png'
 
@@ -22,3 +23,16 @@ def get_latest(q):
             latest = q.get_nowait()
         except queue.Empty:
             return latest
+
+def locate_star_from_screenshot():
+            try:
+                locate_star = pyautogui.locateCenterOnScreen(r"gameplay\utils\img\star.png", confidence=0.8)
+                star_is_visible = locate_star is not None 
+                star_position = locate_star
+                print('start found')
+            except pyautogui.ImageNotFoundException:
+                star_is_visible = False  
+                star_position = None
+                print('no star')
+            
+            return star_is_visible, star_position

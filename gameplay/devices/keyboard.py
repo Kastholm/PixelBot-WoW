@@ -115,7 +115,7 @@ def sspace(one_click=False, s=0.05, e=0.3):
     if one_click == True:
         avg_click_dur(s, e)
 
-def release(one_click=False, s=0.05, e=0.3):
+def release_keys(one_click=False, s=0.05, e=0.3):
     result.run('sudo python3 release.py')
     if one_click == True:
         avg_click_dur(s, e)
